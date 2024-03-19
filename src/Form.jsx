@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 import { useFormik } from "formik";
-import { useState } from "react";
+
 import * as Yup from "yup";
 const validation = Yup.object().shape({
   fname: Yup.string()
@@ -19,7 +19,6 @@ const validation = Yup.object().shape({
     .required("Required"),
 });
 export default function MyForm() {
-  const [martial, setMartial] = useState("");
   const formik = useFormik({
     initialValues: {
       fname: "",
@@ -34,9 +33,6 @@ export default function MyForm() {
       console.log(values);
     },
   });
-  const handleMartial = (e) => {
-    setMartial(e.target.value);
-  };
   return (
     <>
       <form className="form" onSubmit={formik.handleSubmit}>
@@ -99,16 +95,14 @@ export default function MyForm() {
           <select
             className="fields"
             id="maritalStatus"
-            value={martial}
-            onChange={handleMartial}
-            {...addEventListener("change", formik.handleChange)}
+            onChange={formik.handleChange}
             name="marital_status"
           >
             <option>Select marital Status</option>
             <option value="single">Single</option>
             <option value="married">Married</option>
           </select>
-          {martial === "married" && (
+          {formik.values.marital_status === "married" && (
             <div>
               <label>Wife's Name:</label>
               <input
