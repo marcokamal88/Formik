@@ -36,6 +36,7 @@ export default function MyForm() {
   return (
     <>
       <form className="form" onSubmit={formik.handleSubmit}>
+        <h2>Login form</h2>
         <div>
           <label>First name:</label>
           <input
@@ -118,7 +119,7 @@ export default function MyForm() {
             </div>
           )}
         </div>
-        <button type="submit">Submit</button>
+        <button type="submit">Login</button>
       </form>
     </>
   );
