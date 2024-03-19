@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
-import { Formik, Field, Form } from "formik";
+import { useFormik } from "formik";
 import { useState } from "react";
 import * as Yup from "yup";
 const validation = Yup.object().shape({
@@ -19,92 +19,113 @@ const validation = Yup.object().shape({
     .required("Required"),
 });
 export default function MyForm() {
-  const [martial, setMartial] = useState(null);
+  const [martial, setMartial] = useState("");
+  const formik = useFormik({
+    initialValues: {
+      fname: "",
+      lname: "",
+      Email: "",
+      password: "",
+      marital_status: "",
+      wife: "none",
+    },
+    validationSchema: validation,
+    onSubmit: async (values) => {
+      console.log(values);
+    },
+  });
   const handleMartial = (e) => {
     setMartial(e.target.value);
   };
   return (
     <>
-      <Formik
-        initialValues={{
-          fname: "",
-          lname: "",
-          Email: "",
-          password: "",
-          wife: "",
-        }}
-        validationSchema={validation}
-        onSubmit={async (values) => {
-          await new Promise((resolve) => setTimeout(resolve, 500));
-          alert(JSON.stringify(values, null, 2));
-        }}
-      >
-        {({ errors, touched }) => (
-          <Form className="form">
+      <form className="form" onSubmit={formik.handleSubmit}>
+        <div>
+          <label>First name:</label>
+          <input
+            className="fields"
+            type="text"
+            id="fname"
+            name="fname"
+            onChange={formik.handleChange}
+          />
+          {formik.errors.fname && formik.touched.fname ? (
+            <div className="errors">*{formik.errors.fname}</div>
+          ) : null}
+        </div>
+        <div>
+          <label>Last name:</label>
+          <input
+            className="fields"
+            type="text"
+            id="lname"
+            name="lname"
+            onChange={formik.handleChange}
+          />
+          {formik.errors.lname && formik.touched.lname ? (
+            <div className="errors">*{formik.errors.lname}</div>
+          ) : null}
+        </div>
+        <div>
+          <label>Email:</label>
+          <input
+            className="fields"
+            type="text"
+            id="Email"
+            name="Email"
+            onChange={formik.handleChange}
+          />
+
+          {formik.errors.Email && formik.touched.Email ? (
+            <div className="errors">*{formik.errors.Email}</div>
+          ) : null}
+        </div>
+        <div>
+          <label>password:</label>
+          <input
+            className="fields"
+            type="password"
+            id="password"
+            name="password"
+            onChange={formik.handleChange}
+          />
+
+          {formik.errors.password && formik.touched.password ? (
+            <div className="errors">* {formik.errors.password}</div>
+          ) : null}
+        </div>
+        <div>
+          <label>marital Status: </label>
+          <select
+            className="fields"
+            id="maritalStatus"
+            value={martial}
+            onChange={handleMartial}
+            {...addEventListener("change", formik.handleChange)}
+            name="marital_status"
+          >
+            <option>Select marital Status</option>
+            <option value="single">Single</option>
+            <option value="married">Married</option>
+          </select>
+          {martial === "married" && (
             <div>
-              <label>First name:</label>
-              <Field className="fields" type="text" id="fname" name="fname" />
-              {errors.fname && touched.fname ? (
-                <div className="errors">*{errors.fname}</div>
-              ) : null}
-            </div>
-            <div>
-              <label>Last name:</label>
-              <Field className="fields" type="text" id="lname" name="lname" />
-              {errors.lname && touched.lname ? (
-                <div className="errors">*{errors.lname}</div>
-              ) : null}
-            </div>
-            <div>
-              <label>Email:</label>
-              <Field className="fields" type="text" id="Email" name="Email" />
-              {errors.Email && touched.Email ? (
-                <div className="errors">*{errors.Email}</div>
-              ) : null}
-            </div>
-            <div>
-              <label>password:</label>
-              <Field
+              <label>Wife's Name:</label>
+              <input
+                name="wife"
                 className="fields"
-                type="password"
-                id="password"
-                name="password"
+                type="text"
+                id="wifeName"
+                onChange={formik.handleChange}
               />
-              {errors.password && touched.password ? (
-                <div className="errors">* {errors.password}</div>
+              {formik.errors.wife && formik.touched.wife ? (
+                <div className="errors">*{formik.errors.wife}</div>
               ) : null}
             </div>
-            <div>
-              <label>marital Status: </label>
-              <select
-                className="fields"
-                id="maritalStatus"
-                value={martial}
-                onChange={handleMartial}
-              >
-                <option>Select marital Status</option>
-                <option value="single">Single</option>
-                <option value="married">Married</option>
-              </select>
-              {martial === "married" && (
-                <div>
-                  <label>Wife's Name:</label>
-                  <Field
-                    name="wife"
-                    className="fields"
-                    type="text"
-                    id="wifeName"
-                  />
-                  {errors.wife && touched.wife ? (
-                    <div className="errors">*{errors.wife}</div>
-                  ) : null}
-                </div>
-              )}
-            </div>
-            <button type="submit">Submit</button>
-          </Form>
-        )}
-      </Formik>
+          )}
+        </div>
+        <button type="submit">Submit</button>
+      </form>
     </>
   );
 }
